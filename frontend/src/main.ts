@@ -9,7 +9,7 @@ import {
   type PublicClient,
   type Hex,
 } from 'viem'
-import { CHAIN, DEFAULT_CONTRACT_ADDRESS, WEATHER_CRE_ABI } from './contract'
+import { CHAIN, DEFAULT_CONTRACT_ADDRESS, WEATHER_CRE_ABI, ZERO_ADDRESS } from './contract'
 
 // ─── Types ───────────────────────────────────────────────────────────────
 declare global {
@@ -65,7 +65,7 @@ function getContractInstance() {
 
 // ─── Data loaders ────────────────────────────────────────────────────────
 async function loadReadings(): Promise<void> {
-  if (!account || contractAddress === DEFAULT_CONTRACT_ADDRESS) {
+  if (!account || contractAddress.toLowerCase() === ZERO_ADDRESS) {
     readings = []
     return
   }
@@ -87,7 +87,7 @@ async function loadReadings(): Promise<void> {
 }
 
 async function loadForwarder(): Promise<void> {
-  if (contractAddress === DEFAULT_CONTRACT_ADDRESS) {
+  if (contractAddress.toLowerCase() === ZERO_ADDRESS) {
     forwarderAddress = null
     return
   }
@@ -142,7 +142,7 @@ async function requestWeather(): Promise<void> {
     render()
     return
   }
-  if (contractAddress === DEFAULT_CONTRACT_ADDRESS) {
+  if (contractAddress.toLowerCase() === ZERO_ADDRESS) {
     txStatus = { kind: 'error', message: 'Set the WeatherCRE contract address first.' }
     render()
     return
@@ -217,7 +217,7 @@ function saveAddress(next: string): void {
 // ─── Render ──────────────────────────────────────────────────────────────
 function render(): void {
   const app = document.getElementById('app')!
-  const isAddressSet = contractAddress !== DEFAULT_CONTRACT_ADDRESS
+  const isAddressSet = contractAddress.toLowerCase() !== ZERO_ADDRESS
 
   app.innerHTML = `
     <header>

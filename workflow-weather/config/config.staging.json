@@ -1,5 +1,5 @@
 {
   "chainSelectorName": "ethereum-testnet-sepolia",
-  "weatherCREAddress": "0x0000000000000000000000000000000000000000",
+  "weatherCREAddress": "0xDaF88B18644AA9AD79340C3316E72B098f6fbc3F",
   "gasLimit": 500000
 }

@@ -29,7 +29,7 @@ contract WeatherCRE {
     // the CRE forwarder address for the target network.
     //
     // Known CRE Forwarder addresses:
-    //   - Ethereum Sepolia (testnet): 0x15fc6ae953e024d975e77382eeec56a9101f9f88
+    //   - Ethereum Sepolia (testnet): 0x15fC6ae953E024d975e77382eEeC56A9101f9F88
     address public forwarder;
     address public immutable owner;
 
@@ -40,7 +40,7 @@ contract WeatherCRE {
         owner = msg.sender;
         // Default to the Ethereum Sepolia CRE forwarder. Override with
         // `setForwarder` when deploying to a different network.
-        forwarder = address(uint160(0x15fc6ae953e024d975e77382eeec56a9101f9f88));
+        forwarder = 0x15fC6ae953E024d975e77382eEeC56A9101f9F88;
     }
 
     /// @notice Set the CRE forwarder that is authorized to call `onReport`.
