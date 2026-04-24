@@ -1,0 +1,8 @@
+kind: custom
+id: workflow-weather
+projectDir: .
+title: "Weather"
+description: "Fetch weather from wttr.in on-demand via WeatherCRE contract events"
+language: typescript
+workflows:
+  - dir: workflow-weather

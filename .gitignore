@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.bun/
+*.local
+.env
+.env.*
+# Do NOT ignore secrets.yaml — commit the template, not real values
+# Real secrets go into your CRE environment variables
