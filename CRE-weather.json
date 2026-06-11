@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "workflow": {
+    "name": "Weather",
+    "description": "On-demand weather lookup. WeatherCRE.getWeather(city) emits an event; the CRE workflow's EVM log trigger fires, does an HTTP GET to wttr.in, and writes the result back on-chain via WeatherCRE.onReport.",
+    "created": true
+  },
+  "nodes": [
+    {
+      "id": "trg_evmlog_1",
+      "type": "appNode",
+      "position": { "x": 40, "y": 40 },
+      "data": {
+        "kind": "trigger.evmLog",
+        "name": "Weather Requested",
+        "description": "Fires on WeatherCRE.WeatherRequested(string city, address requester) emitted by getWeather(city).",
+        "smartContractName": "WeatherCRE",
+        "eventName": "WeatherRequested",
+        "contractAddress": "0xDaF88B18644AA9AD79340C3316E72B098f6fbc3F",
+        "chainSelector": "ethereum-testnet-sepolia",
+        "confidenceLevel": "Finalized"
+      }
+    },
+    {
+      "id": "cap_httpget_1",
+      "type": "appNode",
+      "position": { "x": 380, "y": 40 },
+      "data": {
+        "kind": "cap.http.get",
+        "name": "Fetch wttr.in",
+        "description": "Plain-text weather lookup. Returns one line like 'Lisbon: ☀️ +22°C'.",
+        "websiteName": "wttr.in",
+        "apiUrl": "https://wttr.in/{city}?format=3&m"
+      }
+    },
+    {
+      "id": "cap_evmwrite_1",
+      "type": "appNode",
+      "position": { "x": 720, "y": 40 },
+      "data": {
+        "kind": "cap.evmWrite",
+        "name": "Submit Weather Report",
+        "description": "ABI-encodes (string city, string temperature, uint256 timestamp, address sender) and calls onReport via the CRE forwarder.",
+        "smartContractName": "WeatherCRE",
+        "functionName": "onReport",
+        "contractAddress": "0xDaF88B18644AA9AD79340C3316E72B098f6fbc3F",
+        "chainSelector": "ethereum-testnet-sepolia"
+      }
+    },
+    {
+      "id": "sc_weather_1",
+      "type": "appNode",
+      "position": { "x": 380, "y": 320 },
+      "data": {
+        "kind": "smartContract",
+        "name": "WeatherCRE",
+        "description": "Sepolia contract. getWeather(city) emits WeatherRequested; onReport (forwarder-gated) decodes the report and appends a WeatherReading.",
+        "contractName": "WeatherCRE",
+        "events": [
+          "WeatherRequested(string city, address requester)",
+          "WeatherStored(string city, string temperature, uint256 timestamp, address sender)",
+          "ForwarderUpdated(address forwarder)"
+        ],
+        "functions": [
+          "getWeather(string city)",
+          "setForwarder(address _forwarder)",
+          "onReport(bytes metadata, bytes report)",
+          "getReadingsCount()",
+          "getReadingsCountByRequester(address requester)",
+          "getReadingByRequester(address requester, uint256 index)"
+        ]
+      }
+    },
+    {
+      "id": "web_wttr_1",
+      "type": "appNode",
+      "position": { "x": 720, "y": 320 },
+      "data": {
+        "kind": "website",
+        "name": "wttr.in",
+        "description": "Public no-auth weather API used by the workflow.",
+        "websiteName": "wttr.in",
+        "apiUrls": [
+          "https://wttr.in/{city}?format=3&m"
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_trg_to_http",
+      "source": "trg_evmlog_1",
+      "target": "cap_httpget_1",
+      "type": "smoothstep",
+      "data": { "kind": "callback" },
+      "className": "edge edge--callback"
+    },
+    {
+      "id": "e_http_to_write",
+      "source": "cap_httpget_1",
+      "target": "cap_evmwrite_1",
+      "type": "smoothstep",
+      "data": { "kind": "callback" },
+      "className": "edge edge--callback"
+    },
+    {
+      "id": "e_trg_ref_sc",
+      "source": "trg_evmlog_1",
+      "target": "sc_weather_1",
+      "sourceHandle": "refSource",
+      "targetHandle": "refTarget",
+      "type": "straight",
+      "data": { "kind": "ref" },
+      "className": "edge edge--ref"
+    },
+    {
+      "id": "e_write_ref_sc",
+      "source": "cap_evmwrite_1",
+      "target": "sc_weather_1",
+      "sourceHandle": "refSource",
+      "targetHandle": "refTarget",
+      "type": "straight",
+      "data": { "kind": "ref" },
+      "className": "edge edge--ref"
+    },
+    {
+      "id": "e_http_ref_web",
+      "source": "cap_httpget_1",
+      "target": "web_wttr_1",
+      "sourceHandle": "refSource",
+      "targetHandle": "refTarget",
+      "type": "straight",
+      "data": { "kind": "ref" },
+      "className": "edge edge--ref"
+    }
+  ],
+  "selectedId": null,
+  "idCounter": 6
+}
