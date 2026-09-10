@@ -55,6 +55,8 @@ bun install --cwd ./workflow-weather
 
 **Deployed contract (Sepolia):** [`0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326`](https://sepolia.etherscan.io/address/0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326)
 
+**Deployed contract (Monad Testnet):** [`0xEFc0864bF40832Bb2189203b66810948d05dfAb8`](https://testnet.monadexplorer.com/address/0xEFc0864bF40832Bb2189203b66810948d05dfAb8)
+
 ## 3. Simulate the workflow
 
 Run from the **project root directory**:

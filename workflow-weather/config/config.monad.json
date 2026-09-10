@@ -1,5 +1,5 @@
 {
   "chainSelectorName": "monad-testnet",
-  "weatherCREAddress": "0x0000000000000000000000000000000000000000",
+  "weatherCREAddress": "0xEFc0864bF40832Bb2189203b66810948d05dfAb8",
   "gasLimit": 500000
 }

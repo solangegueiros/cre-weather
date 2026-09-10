@@ -26,7 +26,7 @@ export const NETWORKS: Record<NetworkKey, { chain: Chain; label: string; contrac
   'monad-testnet': {
     chain: monadTestnet,
     label: 'Monad Testnet',
-    contractAddress: ZERO_ADDRESS, // update after deploying WeatherCRE on Monad Testnet
+    contractAddress: '0xEFc0864bF40832Bb2189203b66810948d05dfAb8',
   },
 }
 
