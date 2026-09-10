@@ -2,8 +2,6 @@
 
 A Chainlink CRE workflow that fetches weather from [wttr.in](https://wttr.in) on-demand, triggered by an on-chain event.
 
-Inspired by [WeatherFunctionsSepolia.sol](https://github.com/solangegueiros/chainlink-bootcamp-2024/blob/main/WeatherFunctionsSepolia.sol) (Chainlink Functions version), reimplemented with the Chainlink Runtime Environment (CRE).
-
 CRE workflow scaffolded in the style of [Scaffold CRE](https://github.com/tigeragentt/scaffold-cre).
 
 ## Flow
@@ -111,3 +109,7 @@ git push -u origin main
 - [CRE SDK docs](https://docs.chain.link/cre)
 - [Chainlink Agent Skills](https://github.com/smartcontractkit/chainlink-agent-skills)
 - [CRE Templates](https://github.com/smartcontractkit/cre-templates)
+
+## Notes
+
+Inspired by [WeatherFunctionsSepolia.sol](https://github.com/solangegueiros/chainlink-bootcamp-2024/blob/main/WeatherFunctionsSepolia.sol) (Chainlink Functions version), reimplemented with the Chainlink Runtime Environment (CRE).
