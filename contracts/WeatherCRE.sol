@@ -4,7 +4,8 @@ pragma solidity 0.8.34;
 /**
  * @title WeatherCRE
  * @notice Request a weather reading for a city via a Chainlink CRE workflow.
- * @dev Deploy on Ethereum Sepolia. Forwarder: 0x15fC6ae953E024d975e77382eEeC56A9101f9F88
+ * @dev Deploy on Ethereum Sepolia.
+ *      Forwarder: 0x15fC6ae953E024d975e77382eEeC56A9101f9F88
  *
  *   User flow:
  *     1. Caller invokes `getWeather(city)` on-chain; this emits `WeatherRequested`.
