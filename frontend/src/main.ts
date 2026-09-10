@@ -432,7 +432,7 @@ function render(): void {
       </div>
 
       <div class="card">
-        <h2>Your readings</h2>
+        <h2>My Weather</h2>
         ${
           !account
             ? `<p class="empty">Connect a wallet to see your weather readings.</p>`
@@ -443,7 +443,7 @@ function render(): void {
       </div>
 
       <div class="card">
-        <h2>All readings</h2>
+        <h2>All Weather</h2>
         ${
           allReadings.length === 0
             ? `<p class="empty">No readings stored yet.</p>`
@@ -489,6 +489,12 @@ function render(): void {
 // ─── Boot ────────────────────────────────────────────────────────────────
 render()
 loadAllReadings().then(render)
+
+// Auto-refresh all readings every 30 s so new readings from other wallets appear
+setInterval(async () => {
+  await loadAllReadings()
+  render()
+}, 30_000)
 
 if (window.ethereum) {
   window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: Address[]) => {
