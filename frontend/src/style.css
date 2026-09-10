@@ -101,6 +101,24 @@ header h1 { color: #fff; font-size: 1.3rem; font-weight: 700; white-space: nowra
 }
 .btn-connect-header:hover { background: rgba(255,255,255,.28); }
 
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.35);
+  color: #fff;
+  border-radius: 20px;
+  padding: .3rem .75rem;
+  font-size: .82rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .2s;
+}
+.github-btn:hover { background: rgba(255,255,255,.28); }
+
 /* ── Cards ── */
 .card {
   background: var(--surface);
