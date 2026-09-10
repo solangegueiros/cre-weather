@@ -50,7 +50,6 @@ let txStatus: { kind: 'pending' | 'success' | 'error'; message: string } | null 
 let cityInput = ''
 let myReadings: Reading[] = []
 let allReadings: Reading[] = []
-let forwarderAddress: Address | null = null
 let unknownNetwork = false
 
 let publicClient: PublicClient = createPublicClient({
@@ -95,7 +94,6 @@ async function applyNetwork(key: NetworkKey): Promise<void> {
   contractAddress = networkContractAddress()
   myReadings = []
   allReadings = []
-  forwarderAddress = null
   txStatus = null
 
   publicClient = createPublicClient({
@@ -110,7 +108,6 @@ async function applyNetwork(key: NetworkKey): Promise<void> {
     })
   }
 
-  await loadForwarder()
   await loadAllReadings()
   if (account) await loadMyReadings()
   render()
@@ -198,19 +195,6 @@ async function loadAllReadings(): Promise<void> {
   } catch (e) {
     console.warn('loadAllReadings failed:', e)
     allReadings = []
-  }
-}
-
-async function loadForwarder(): Promise<void> {
-  if (contractAddress.toLowerCase() === ZERO_ADDRESS) {
-    forwarderAddress = null
-    return
-  }
-  try {
-    const contract = getContractInstance()
-    forwarderAddress = (await contract.read.forwarder()) as Address
-  } catch {
-    forwarderAddress = null
   }
 }
 
@@ -320,9 +304,7 @@ function saveAddress(next: string): void {
   editingAddress = false
   myReadings = []
   allReadings = []
-  forwarderAddress = null
-  loadForwarder().then(async () => {
-    await loadAllReadings()
+  loadAllReadings().then(async () => {
     if (account) await loadMyReadings()
     render()
   })
@@ -423,19 +405,6 @@ function render(): void {
               `
           }
         </div>
-        ${
-          forwarderAddress
-            ? `
-              <div class="contract-row">
-                <span class="label">Forwarder:</span>
-                <span class="address-inline">
-                  <code>${forwarderAddress}</code>
-                  <button class="btn-copy" id="forwarder-copy">Copy</button>
-                </span>
-              </div>
-            `
-            : ''
-        }
       </div>
 
       <div class="card">
@@ -488,9 +457,6 @@ function render(): void {
   document.getElementById('address-copy')?.addEventListener('click', () =>
     copyToClipboard(contractAddress),
   )
-  document.getElementById('forwarder-copy')?.addEventListener('click', () =>
-    forwarderAddress && copyToClipboard(forwarderAddress),
-  )
   document.getElementById('address-edit')?.addEventListener('click', () => {
     editingAddress = true
     render()
@@ -518,7 +484,7 @@ function render(): void {
 
 // ─── Boot ────────────────────────────────────────────────────────────────
 render()
-loadForwarder().then(() => loadAllReadings()).then(render)
+loadAllReadings().then(render)
 
 if (window.ethereum) {
   window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: Address[]) => {

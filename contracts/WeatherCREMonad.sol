@@ -4,7 +4,7 @@ pragma solidity 0.8.34;
 /**
  * @title WeatherCRE
  * @notice Request a weather reading for a city via a Chainlink CRE workflow.
- * @dev Deploy on Monad Testnet.
+ * @dev Deploy on Monad Testnet. Forwarder: 0xB9F79d863261869B234c481D1f9A7af84AeAd192
  *
  *   User flow:
  *     1. Caller invokes `getWeather(city)` on-chain; this emits `WeatherRequested`.
