@@ -40,6 +40,11 @@ frontend/                         ← Vite + TS + viem mini-dapp
 - [Bun](https://bun.sh) >= 1.2.21
 - [Chainlink CRE CLI](https://docs.chain.link/cre/reference/cli)
 
+```bash
+git clone https://github.com/solangegueiros/cre-weather
+cd cre-weather
+```
+
 ## 1. Install dependencies
 
 Run from the **project root directory**:
