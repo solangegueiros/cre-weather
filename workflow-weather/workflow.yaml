@@ -12,6 +12,15 @@ staging-settings:
     secrets-path: "../secrets.yaml"
 
 # ==========================================================================
+monad-settings:
+  user-workflow:
+    workflow-name: "weather-monad"
+  workflow-artifacts:
+    workflow-path: "./main.ts"
+    config-path: "./config/config.monad.json"
+    secrets-path: "../secrets.yaml"
+
+# ==========================================================================
 production-settings:
   user-workflow:
     workflow-name: "weather-production"

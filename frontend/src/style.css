@@ -163,6 +163,15 @@ header h1 { color: #fff; font-size: 1.5rem; font-weight: 700; }
   font-size: .85rem;
 }
 .contract-row code { word-break: break-all; }
+.network-select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: .3rem .5rem;
+  font-size: .9rem;
+  cursor: pointer;
+}
 
 .connect-section { margin-top: 1rem; }
 

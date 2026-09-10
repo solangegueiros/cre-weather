@@ -1,8 +1,36 @@
-import { sepolia } from 'viem/chains'
+import { sepolia, type Chain } from 'viem/chains'
 
-export const CHAIN = sepolia
-export const DEFAULT_CONTRACT_ADDRESS = '0xDaF88B18644AA9AD79340C3316E72B098f6fbc3F'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const monadTestnet: Chain = {
+  id: 10143,
+  name: 'Monad Testnet',
+  nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://testnet-rpc.monad.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'Monad Explorer', url: 'https://testnet.monadexplorer.com' },
+  },
+  testnet: true,
+}
+
+export type NetworkKey = 'sepolia' | 'monad-testnet'
+
+export const NETWORKS: Record<NetworkKey, { chain: Chain; label: string; contractAddress: string }> = {
+  'sepolia': {
+    chain: sepolia,
+    label: 'Ethereum Sepolia',
+    contractAddress: '0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326',
+  },
+  'monad-testnet': {
+    chain: monadTestnet,
+    label: 'Monad Testnet',
+    contractAddress: ZERO_ADDRESS, // update after deploying WeatherCRE on Monad Testnet
+  },
+}
+
+export const DEFAULT_NETWORK: NetworkKey = 'sepolia'
 
 export const WEATHER_CRE_ABI = [
   {

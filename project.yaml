@@ -10,6 +10,12 @@ staging-settings:
       url: https://ethereum-sepolia-rpc.publicnode.com
 
 # ==========================================================================
+monad-settings:
+  rpcs:
+    - chain-name: monad-testnet
+      url: https://testnet-rpc.monad.xyz
+
+# ==========================================================================
 production-settings:
   rpcs:
     - chain-name: ethereum-mainnet

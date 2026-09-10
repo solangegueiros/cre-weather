@@ -51,7 +51,9 @@ bun install --cwd ./workflow-weather
 ## 2. Deploy the contract and update config
 
 - Deploy `contracts/WeatherCRE.sol` to Sepolia. The constructor sets `forwarder = 0x15fC6ae953E024d975e77382eEeC56A9101f9F88` (Ethereum Sepolia CRE forwarder); use `setForwarder(...)` to override on other networks.
-- Put the deployed contract address in `workflow-weather/config/config.staging.json` as `weatherCREAddress` (a default deployment at `0xDaF88B18644AA9AD79340C3316E72B098f6fbc3F` is prefilled — replace with your own if you redeploy).
+- Put the deployed contract address in `workflow-weather/config/config.staging.json` as `weatherCREAddress`.
+
+**Deployed contract (Sepolia):** [`0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326`](https://sepolia.etherscan.io/address/0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326)
 
 ## 3. Simulate the workflow
 
@@ -60,6 +62,15 @@ Run from the **project root directory**:
 ```bash
 cre workflow simulate workflow-weather --target staging-settings
 ```
+
+To replay an existing transaction, pass the tx hash directly:
+
+```bash
+cre workflow simulate workflow-weather --evm-tx-hash 0x0b5e222e0632975c13d2f8deb448ba5fb5b978bf970550f4daebc0c1dd0765f2 --evm-event-index 0
+```
+
+**Example transaction — `getWeather("Sao Paulo")`:**
+[`0x0b5e222e...0765f2`](https://sepolia.etherscan.io/tx/0x0b5e222e0632975c13d2f8deb448ba5fb5b978bf970550f4daebc0c1dd0765f2)
 
 ## 4. Send a real transaction on chain
 
