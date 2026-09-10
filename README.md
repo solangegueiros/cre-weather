@@ -55,16 +55,27 @@ bun install --cwd ./workflow-weather
 
 ## 2. Deploy the contract and update config
 
-- Deploy `contracts/WeatherCRE.sol` to Sepolia. The constructor sets `forwarder = 0x15fC6ae953E024d975e77382eEeC56A9101f9F88` (Ethereum Sepolia CRE forwarder); use `setForwarder(...)` to override on other networks.
-- Put the deployed contract address in `workflow-weather/config/config.staging.json` as `weatherCREAddress`.
+### Sepolia
+
+- Deploy `contracts/WeatherCRE.sol` to Ethereum Sepolia.
+  - The constructor defaults to forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`.
+- Update `workflow-weather/config/config.staging.json` → set `weatherCREAddress` to the deployed address.
 
 **Deployed contract (Sepolia):** [`0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326`](https://sepolia.etherscan.io/address/0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326)
+
+### Monad Testnet
+
+- Deploy `contracts/WeatherCREMonad.sol` to Monad Testnet.
+  - The constructor defaults to forwarder `0xB9F79d863261869B234c481D1f9A7af84AeAd192`.
+- Update `workflow-weather/config/config.monad.json` → set `weatherCREAddress` to the deployed address.
 
 **Deployed contract (Monad Testnet):** [`0xEFc0864bF40832Bb2189203b66810948d05dfAb8`](https://testnet.monadexplorer.com/address/0xEFc0864bF40832Bb2189203b66810948d05dfAb8)
 
 ## 3. Simulate the workflow
 
-Run from the **project root directory**:
+Run from the **project root directory**.
+
+### Sepolia
 
 ```bash
 cre workflow simulate workflow-weather --target staging-settings
@@ -79,13 +90,27 @@ cre workflow simulate workflow-weather --evm-tx-hash 0x0b5e222e0632975c13d2f8deb
 **Example transaction — `getWeather("Sao Paulo")`:**
 [`0x0b5e222e...0765f2`](https://sepolia.etherscan.io/tx/0x0b5e222e0632975c13d2f8deb448ba5fb5b978bf970550f4daebc0c1dd0765f2)
 
+### Monad Testnet
+
+```bash
+cre workflow simulate workflow-weather --target monad-settings
+```
+
 ## 4. Send a real transaction on chain
 
 On `.env`, define `CRE_ETH_PRIVATE_KEY`.
-Use `--broadcast` to submit the transaction:
+Use `--broadcast` to submit the transaction.
+
+### Sepolia
 
 ```bash
 cre workflow simulate workflow-weather --target=staging-settings --broadcast
+```
+
+### Monad Testnet
+
+```bash
+cre workflow simulate workflow-weather --target=monad-settings --broadcast
 ```
 
 ## Frontend
