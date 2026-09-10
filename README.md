@@ -61,7 +61,7 @@ bun install --cwd ./workflow-weather
   - The constructor defaults to forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`.
 - Update `workflow-weather/config/config.staging.json` → set `weatherCREAddress` to the deployed address.
 
-**Deployed contract (Sepolia):** [`0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326`](https://sepolia.etherscan.io/address/0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326)
+**Deployed contract example:** [`0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326`](https://sepolia.etherscan.io/address/0xCbD2faF7D8860B91c9E7fD0821d4F8Fca10F4326)
 
 ### Monad Testnet
 
@@ -69,7 +69,7 @@ bun install --cwd ./workflow-weather
   - The constructor defaults to forwarder `0xB9F79d863261869B234c481D1f9A7af84AeAd192`.
 - Update `workflow-weather/config/config.monad.json` → set `weatherCREAddress` to the deployed address.
 
-**Deployed contract (Monad Testnet):** [`0xEFc0864bF40832Bb2189203b66810948d05dfAb8`](https://testnet.monadexplorer.com/address/0xEFc0864bF40832Bb2189203b66810948d05dfAb8)
+**Deployed contract example:** [`0xEFc0864bF40832Bb2189203b66810948d05dfAb8`](https://testnet.monadexplorer.com/address/0xEFc0864bF40832Bb2189203b66810948d05dfAb8)
 
 ## 3. Simulate the workflow
 
