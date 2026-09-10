@@ -38,8 +38,14 @@ contract WeatherCRE {
 
     constructor() {
         owner = msg.sender;
-        // Default to the Ethereum Sepolia CRE forwarder. Override with
+        // Default to the Ethereum Sepolia CRE simulation forwarder. Override with
         // `setForwarder` when deploying to a different network.
+        //
+        // Known CRE forwarder addresses — full directory:
+        // https://docs.chain.link/cre/guides/workflow/using-evm-client/forwarder-directory-ts
+        //
+        //   Ethereum Sepolia (simulation): 0x15fC6ae953E024d975e77382eEeC56A9101f9F88
+        //   Monad Testnet   (simulation): 0xB9F79d863261869B234c481D1f9A7af84AeAd192
         forwarder = 0x15fC6ae953E024d975e77382eEeC56A9101f9F88;
     }
 
