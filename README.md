@@ -1,5 +1,7 @@
 # Weather
 
+[weather](http://weather.solange.dev/)
+
 A Chainlink CRE workflow that fetches weather from [wttr.in](https://wttr.in) on-demand, triggered by an on-chain event.
 
 CRE workflow scaffolded in the style of [Scaffold CRE](https://github.com/tigeragentt/scaffold-cre).
@@ -115,6 +117,7 @@ cre workflow simulate workflow-weather --target=monad-settings --broadcast
 
 ## Frontend
 
+
 A Vite + TypeScript + viem mini-dapp lives in `frontend/`. It lets you connect a wallet, call `getWeather(city)`, and see the readings the CRE workflow writes back.
 
 ```bash
@@ -123,18 +126,28 @@ npm install
 npm run dev
 ```
 
-Edit the contract address in-app if you redeploy.
+> Edit the contract address in-app if you redeploy.
 
-## Push to GitHub
+Open [http://localhost:5175](http://localhost:5175) in your browser.
+
+The contract addresses are pre-configured with our deployed examples. 
+Connect your wallet to play.
+
+### Build for production
 
 ```bash
-git init
-git add .
-git commit -m "Initial scaffold: Weather"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
+npm run build
 ```
+
+Output is in `frontend/dist/`.
+
+### Live frontend
+
+There are a live frontend at:
+
+- [weather](http://weather.solange.dev/)
+
+> It is not always running CRE, but you can update to your address and use to test your project.
 
 ## References
 
