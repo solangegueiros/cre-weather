@@ -82,6 +82,23 @@ export const WEATHER_CRE_ABI = [
     outputs: [{ type: 'address' }],
   },
   {
+    type: 'function',
+    name: 'readings',
+    stateMutability: 'view',
+    inputs: [{ name: 'index', type: 'uint256' }],
+    outputs: [
+      {
+        type: 'tuple',
+        components: [
+          { name: 'city', type: 'string' },
+          { name: 'temperature', type: 'string' },
+          { name: 'timestamp', type: 'uint256' },
+          { name: 'sender', type: 'address' },
+        ],
+      },
+    ],
+  },
+  {
     type: 'event',
     name: 'WeatherRequested',
     inputs: [

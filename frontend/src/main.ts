@@ -48,7 +48,8 @@ let editingAddress = false
 let account: Address | null = null
 let txStatus: { kind: 'pending' | 'success' | 'error'; message: string } | null = null
 let cityInput = ''
-let readings: Reading[] = []
+let myReadings: Reading[] = []
+let allReadings: Reading[] = []
 let forwarderAddress: Address | null = null
 let unknownNetwork = false
 
@@ -92,7 +93,8 @@ async function applyNetwork(key: NetworkKey): Promise<void> {
   localStorage.setItem(STORAGE_KEY_NETWORK, key)
 
   contractAddress = networkContractAddress()
-  readings = []
+  myReadings = []
+  allReadings = []
   forwarderAddress = null
   txStatus = null
 
@@ -109,7 +111,8 @@ async function applyNetwork(key: NetworkKey): Promise<void> {
   }
 
   await loadForwarder()
-  if (account) await loadReadings()
+  await loadAllReadings()
+  if (account) await loadMyReadings()
   render()
 }
 
@@ -153,9 +156,9 @@ async function switchNetwork(key: NetworkKey): Promise<void> {
 }
 
 // ─── Data loaders ────────────────────────────────────────────────────────
-async function loadReadings(): Promise<void> {
+async function loadMyReadings(): Promise<void> {
   if (!account || contractAddress.toLowerCase() === ZERO_ADDRESS) {
-    readings = []
+    myReadings = []
     return
   }
   try {
@@ -168,10 +171,33 @@ async function loadReadings(): Promise<void> {
       const r = (await contract.read.getReadingByRequester([account, BigInt(i)])) as Reading
       loaded.push(r)
     }
-    readings = loaded
+    myReadings = loaded
   } catch (e) {
-    console.warn('loadReadings failed:', e)
-    readings = []
+    console.warn('loadMyReadings failed:', e)
+    myReadings = []
+  }
+}
+
+async function loadAllReadings(): Promise<void> {
+  if (contractAddress.toLowerCase() === ZERO_ADDRESS) {
+    allReadings = []
+    return
+  }
+  try {
+    const contract = getContractInstance()
+    const count = (await contract.read.getReadingsCount()) as bigint
+    const total = Number(count)
+    if (total === 0) { allReadings = []; return }
+    const loaded: Reading[] = []
+    const start = Math.max(0, total - 20)
+    for (let i = total - 1; i >= start; i--) {
+      const r = (await contract.read.readings([BigInt(i)])) as Reading
+      loaded.push(r)
+    }
+    allReadings = loaded
+  } catch (e) {
+    console.warn('loadAllReadings failed:', e)
+    allReadings = []
   }
 }
 
@@ -202,10 +228,8 @@ async function connectWallet(): Promise<void> {
     const detected = detectNetworkFromChainId(currentChainIdHex)
 
     if (detected) {
-      // Wallet is on a known network — auto-select it
       await applyNetwork(detected)
     } else {
-      // Unknown network — keep current selection, show warning
       unknownNetwork = true
       walletClient = createWalletClient({
         chain: NETWORKS[selectedNetwork].chain,
@@ -259,7 +283,7 @@ async function requestWeather(): Promise<void> {
         message: `WeatherRequested emitted. CRE workflow will fetch and store in ~1 block.`,
       }
       cityInput = ''
-      pollReadingsForUpdate(readings.length)
+      pollReadingsForUpdate(myReadings.length)
     } else {
       txStatus = { kind: 'error', message: 'Transaction reverted.' }
     }
@@ -274,8 +298,9 @@ async function pollReadingsForUpdate(prevCount: number): Promise<void> {
   const started = Date.now()
   while (Date.now() - started < 120_000) {
     await new Promise((r) => setTimeout(r, 5000))
-    await loadReadings()
-    if (readings.length > prevCount) {
+    await loadMyReadings()
+    await loadAllReadings()
+    if (myReadings.length > prevCount) {
       render()
       return
     }
@@ -293,12 +318,45 @@ function saveAddress(next: string): void {
   contractAddress = trimmed as Address
   localStorage.setItem(storageKeyForNetwork(selectedNetwork), contractAddress)
   editingAddress = false
-  readings = []
+  myReadings = []
+  allReadings = []
   forwarderAddress = null
-  loadForwarder().then(() => {
-    if (account) loadReadings().then(render)
-    else render()
+  loadForwarder().then(async () => {
+    await loadAllReadings()
+    if (account) await loadMyReadings()
+    render()
   })
+}
+
+// ─── Render helpers ───────────────────────────────────────────────────────
+function renderReadingsTable(rows: Reading[], showWho: boolean): string {
+  if (rows.length === 0) return ''
+  return `
+    <table class="readings-table">
+      <thead>
+        <tr>
+          <th>City</th>
+          <th>Date</th>
+          <th>Weather</th>
+          ${showWho ? '<th>Who</th>' : ''}
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (r) => `
+          <tr>
+            <td>${r.city}</td>
+            <td class="mono-sm">${fmtTime(r.timestamp)}</td>
+            <td class="weather-cell">${r.temperature}</td>
+            ${showWho ? `<td class="mono-sm">${shortAddr(r.sender)}</td>` : ''}
+          </tr>
+        `,
+          )
+          .join('')}
+      </tbody>
+    </table>
+  `
 }
 
 // ─── Render ──────────────────────────────────────────────────────────────
@@ -314,10 +372,20 @@ function render(): void {
 
   app.innerHTML = `
     <header>
-      <div class="header-logo">⛅</div>
-      <div class="header-text">
-        <h1>Weather CRE</h1>
-        <p class="subtitle">Request weather via Chainlink CRE</p>
+      <div class="header-left">
+        <div class="header-logo">⛅</div>
+        <div class="header-text">
+          <h1>Weather CRE</h1>
+          <p class="subtitle">Request weather via Chainlink CRE</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <select id="network-select" class="network-select-header">${networkOptions}</select>
+        ${
+          account
+            ? `<div class="wallet-chip"><span class="dot"></span>${shortAddr(account)}</div>`
+            : `<button class="btn-connect-header" id="connect-btn-header">Connect Wallet</button>`
+        }
       </div>
     </header>
 
@@ -331,10 +399,6 @@ function render(): void {
       }
 
       <div class="card contracts-box">
-        <div class="contract-row">
-          <span class="label">Network:</span>
-          <select id="network-select" class="network-select">${networkOptions}</select>
-        </div>
         <div class="contract-row">
           <span class="label">WeatherCRE:</span>
           ${
@@ -390,43 +454,23 @@ function render(): void {
         ${txStatus ? `<div class="tx-status ${txStatus.kind}">${txStatus.message}</div>` : ''}
       </div>
 
-      ${
-        account
-          ? `
-            <div class="card">
-              <div class="info-row">
-                <div class="info-item">
-                  <span class="label">Connected wallet</span>
-                  <span class="value" style="font-family: monospace; font-size: .95rem;">${shortAddr(account)}</span>
-                </div>
-                <div class="info-item">
-                  <span class="label">Network</span>
-                  <span class="value" style="font-size: .95rem;">${NETWORKS[selectedNetwork].label}</span>
-                </div>
-              </div>
-            </div>
-          `
-          : ''
-      }
-
       <div class="card">
         <h2>Your readings</h2>
         ${
           !account
             ? `<p class="empty">Connect a wallet to see your weather readings.</p>`
-            : readings.length === 0
+            : myReadings.length === 0
               ? `<p class="empty">No readings yet. Request one above.</p>`
-              : `<div class="readings-list">${readings
-                  .map(
-                    (r) => `
-                  <div class="reading-item">
-                    <div class="city">${r.city}</div>
-                    <div class="temp">${r.temperature}</div>
-                    <div class="meta">${fmtTime(r.timestamp)} · from ${shortAddr(r.sender)}</div>
-                  </div>
-                `,
-                  )
-                  .join('')}</div>`
+              : renderReadingsTable(myReadings, false)
+        }
+      </div>
+
+      <div class="card">
+        <h2>All readings</h2>
+        ${
+          allReadings.length === 0
+            ? `<p class="empty">No readings stored yet.</p>`
+            : renderReadingsTable(allReadings, true)
         }
       </div>
     </div>
@@ -436,6 +480,7 @@ function render(): void {
   document.getElementById('network-select')?.addEventListener('change', (e) => {
     switchNetwork((e.target as HTMLSelectElement).value as NetworkKey)
   })
+  document.getElementById('connect-btn-header')?.addEventListener('click', connectWallet)
   document.getElementById('address-copy')?.addEventListener('click', () =>
     copyToClipboard(contractAddress),
   )
@@ -469,10 +514,9 @@ function render(): void {
 
 // ─── Boot ────────────────────────────────────────────────────────────────
 render()
-loadForwarder().then(render)
+loadForwarder().then(() => loadAllReadings()).then(render)
 
 if (window.ethereum) {
-  // Re-connect if wallet was already authorized
   window.ethereum.request({ method: 'eth_accounts' }).then(async (accounts: Address[]) => {
     if (accounts?.length) {
       account = accounts[0]
@@ -499,13 +543,12 @@ if (window.ethereum) {
           transport: custom(window.ethereum),
         })
       : null
-    readings = []
+    myReadings = []
     unknownNetwork = false
-    if (account) loadReadings().then(render)
+    if (account) loadMyReadings().then(render)
     else render()
   })
 
-  // Auto-detect network when wallet switches chain
   window.ethereum.on?.('chainChanged', (chainIdHex: string) => {
     const detected = detectNetworkFromChainId(chainIdHex)
     if (detected) {
