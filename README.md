@@ -55,7 +55,7 @@ bun install --cwd ./workflow-weather
 
 ## 2. Deploy the contract and update config
 
-### Sepolia
+### Ethereum Sepolia
 
 - Deploy `contracts/WeatherCRE.sol` to Ethereum Sepolia.
   - The constructor defaults to forwarder `0x15fC6ae953E024d975e77382eEeC56A9101f9F88`.
@@ -75,7 +75,7 @@ bun install --cwd ./workflow-weather
 
 Run from the **project root directory**.
 
-### Sepolia
+### Ethereum Sepolia
 
 ```bash
 cre workflow simulate workflow-weather --target staging-settings
@@ -101,7 +101,7 @@ cre workflow simulate workflow-weather --target monad-settings
 On `.env`, define `CRE_ETH_PRIVATE_KEY`.
 Use `--broadcast` to submit the transaction.
 
-### Sepolia
+### Ethereum Sepolia
 
 ```bash
 cre workflow simulate workflow-weather --target=staging-settings --broadcast
