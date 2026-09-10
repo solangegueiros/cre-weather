@@ -188,7 +188,10 @@ async function loadAllReadings(): Promise<void> {
     const loaded: Reading[] = []
     const start = Math.max(0, total - 20)
     for (let i = total - 1; i >= start; i--) {
-      const r = (await contract.read.readings([BigInt(i)])) as Reading
+      const raw = await contract.read.readings([BigInt(i)]) as any
+      const r: Reading = Array.isArray(raw)
+        ? { city: raw[0], temperature: raw[1], timestamp: raw[2], sender: raw[3] }
+        : raw as Reading
       loaded.push(r)
     }
     allReadings = loaded

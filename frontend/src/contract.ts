@@ -87,15 +87,10 @@ export const WEATHER_CRE_ABI = [
     stateMutability: 'view',
     inputs: [{ name: 'index', type: 'uint256' }],
     outputs: [
-      {
-        type: 'tuple',
-        components: [
-          { name: 'city', type: 'string' },
-          { name: 'temperature', type: 'string' },
-          { name: 'timestamp', type: 'uint256' },
-          { name: 'sender', type: 'address' },
-        ],
-      },
+      { name: 'city', type: 'string' },
+      { name: 'temperature', type: 'string' },
+      { name: 'timestamp', type: 'uint256' },
+      { name: 'sender', type: 'address' },
     ],
   },
   {
