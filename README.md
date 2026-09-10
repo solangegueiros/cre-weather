@@ -35,6 +35,8 @@ frontend/                         ← Vite + TS + viem mini-dapp
 
 ## Prerequisites
 
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en) v20 or higher
 - [Bun](https://bun.sh) >= 1.2.21
 - [Chainlink CRE CLI](https://docs.chain.link/cre/reference/cli)
 
